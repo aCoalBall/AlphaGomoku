@@ -10,3 +10,6 @@ if anyone tries to run this program directly on a M1 Mac, please uses a python i
 
 [PyQt5](https://pypi.org/project/PyQt5/)
 
+[numpy](https://numpy.org)
+
+
