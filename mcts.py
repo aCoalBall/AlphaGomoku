@@ -7,16 +7,18 @@ import torch
 
 
 class Node:
+    '''the Node class represents nodes in monte carlo tree search'''
     def __init__(self, state, parent):
-        self.state = state
-        self.parent = parent
-        self.status = UNCHECKED
-        self.value = 0
-        self.children = {}
-        self.win = 0
-        self.total = 0
+        self.state = state #the game state for the node
+        self.parent = parent #its parent node
+        self.status = UNCHECKED #the status of the node, can be ONGOING, BLACK win, WHITE win or DRAW
+        self.value = 0 #the value of the current state evaluated by the net
+        self.children = {} #all possible moves and the corresponding child nodes
+        self.win = 0 #total win times
+        self.total = 0 #total access times
     
     def get_ucb(self, ucb_const):
+        #get ucb of the node
         if self.total == 0:
             probability = 0
         else:
@@ -26,30 +28,32 @@ class Node:
 
 
 class Mcts:
+    '''The class of Monte Carlo Tree Search'''
     def __init__(self):
-        self.root_node = None
-        self.current_node = None
-        self.current_move = None
+        self.root_node = None #The root node of the tree
+        self.current_node = None #The current accessing node
+        self.current_move = None #The current move that cause the current state
 
-        self.ucb_const = 1
-        self.net = None
-        #total exploration times
-        #the trace of our exploration
-        self.history = []
+        self.ucb_const = 0.8 #The ucb constant
+        self.net = None #The neural network
+        self.history = [] #the trace of our exploration
     
     def mcts_training(self, state, times, net = None) :
+        '''Train via mcts'''
         self.root_node = Node(state, parent = None)
         self.net = net
-        for i in range(times) :
+        for i in range(times) : #Train i times
             self.current_node = self.root_node
             #clear the trace
             self.history = []
+            #The following are the 4 phases of mcts
             self.selection()
             self.expansion()
             result = self.simulation()
             self.back_propagation(result)
 
     def selection(self):
+        '''select a new unaccessed node'''
         #selection is the first phase of mcts, which means a new turn of mcts, 
         # init the current state and its parent to the root
         result = self.current_node.state.check_game_result()
@@ -68,6 +72,7 @@ class Mcts:
 
 
     def expansion(self) :
+        '''expand new node to the tree'''
         #add the new node to the trace
         self.history.append(self.current_node)
         if self.current_node.status != ONGOING:
@@ -83,14 +88,15 @@ class Mcts:
                 self.current_node.children[move] = child_node
 
     def simulation(self) :
+        '''evaluate the game trend by net'''
         if self.current_node.status == ONGOING:
             value = self.forward_net(node = self.current_node, move = self.current_move)
             value = value.item()
-            if value > 0 :
+            if value > 0 : #Better for black player
                 return BLACK
-            elif value == 0 :
+            elif value == 0 : #like a draw
                 return DRAW
-            elif value < 0 :
+            elif value < 0 : #better for white
                 return WHITE
             else :
                 pass
@@ -98,6 +104,7 @@ class Mcts:
             return self.current_node.status
     
     def back_propagation(self, result) :
+        '''update win and total in history nodes'''
         for node in self.history:
             if node.status == ONGOING:
                 node.total += 1
@@ -126,6 +133,7 @@ class Mcts:
             return (next_move, node.children[next_move])
 
     def forward_net(self, node, move):
+        '''running the net'''
         state = node.state
 
         if node.parent == None:
@@ -151,6 +159,7 @@ class Mcts:
         return value 
 
     def best_choice_from_root_node(self):
+        '''used for self training'''
         move, node = self.best_choice(self.root_node)
         state = node.state
         return move, state

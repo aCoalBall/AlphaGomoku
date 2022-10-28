@@ -7,12 +7,14 @@ from GUI import *
 import os
 
 def game_mode() :
+    '''game mode, when call this func, the user can play with ai'''
     os.chdir(os.path.abspath(os.path.dirname(sys.argv[0])))
     app = QApplication(sys.argv)
     ex = GomokuWindow()
     sys.exit(app.exec_())
 
 def train_mode(training_times = 50) :
+    '''train mode, when call this func, the user can train the ai'''
     os.chdir(os.path.dirname(__file__))
     sp = Selfplay()
     sp.set_net_models()
@@ -25,6 +27,7 @@ def train_mode(training_times = 50) :
     np.save('loss_trend_list.npy', loss_trend)
 
 def main():
+    '''the main func, the start point'''
     if len(sys.argv) == 1:
         game_mode()
     elif len(sys.argv) == 2:

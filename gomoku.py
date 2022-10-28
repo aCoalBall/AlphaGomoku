@@ -97,7 +97,7 @@ class Game(State) :
         while True :
             try :
                 if not input_by_window:
-                    pos_x = int(input('x: '))  # 接受玩家的输入人
+                    pos_x = int(input('x: '))  #player's input
                     pos_y = int(input('y: '))
                 if 0 <= pos_x <= (BOARD_SIZE - 1) and 0 <= pos_y <= (BOARD_SIZE - 1) :
                     if self.chessboard[pos_x][pos_y] == 0:
@@ -112,7 +112,7 @@ class Game(State) :
     def ai_move(self) :
         """AI's step"""
         current_state = State(chessboard = self.chessboard, player = self.player)
-        mc = Mcts()
+        mc = Mcts() #use Mcts to select
         mc.mcts_training(current_state, times = 1, net = self.net)
 
         move, state = mc.best_choice_from_root_node()
