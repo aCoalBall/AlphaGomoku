@@ -13,10 +13,10 @@ if anyone tries to run this program directly on a M1 Mac, please uses a python i
 
 ## How to run
 
-# For directly downloading 
-change the working directory to Gomoku, then run:
-python3 main.py play  for playing with AI
-python3 main.py train [training times (optional)] for training the AI
+### For directly downloading 
+change the working directory to Gomoku, then run commands:  
+***python3 main.py play***   for playing with AI  
+***python3 main.py train [training times (optional)]***   for training the AI
 
 it is strongly recommended that training the AI on GPUs
 
