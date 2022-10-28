@@ -2,7 +2,7 @@
 Gomoku AI using CNN
 
 ## Note
-if anyone tries to run this program directly on a M1 Mac, please uses a python interpreter with version 3.9, because PyQt5 can not run correctly under other versions.
+if anyone tries to run this program directly on a M1 Mac, please uses a python interpreter of version 3.9, because PyQt5 can not run correctly under other versions.
 
 ## Dependencies
 
