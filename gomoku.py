@@ -7,11 +7,14 @@ import os
 
 
 class Game(State) :
-
+    '''
+    The game for user playing with AI, different with State class, Game is connencted to user interface
+    '''
     def __init__(self) :
         """constructor"""
         super().__init__()
-        self.number_of_steps = 0
+        self.number_of_steps = 0 #Count total steps
+        #Load the net
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         if os.path.isfile('net_weights.pth'):
             self.net = NeuralNetwork().to(device)

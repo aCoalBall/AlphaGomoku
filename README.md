@@ -13,10 +13,11 @@ if anyone tries to run this program directly on a M1 Mac, please uses a python i
 
 ## How to run
 
-### For directly downloading 
-change the working directory to Gomoku, then run commands:  
+### For directly download 
+After downloading, change the working directory to Gomoku, then run commands:  
 ***python3 main.py play***   for playing with AI  
 ***python3 main.py train [training times (optional)]***   for training the AI
 
-it is strongly recommended that training the AI on GPUs
+it is strongly adviced to train the AI on GPUs and it may take hours to finish the train depending on the 'training times' parameter.
+The trained net is saved in net_weights.pth.
 

@@ -4,7 +4,9 @@ from PyQt5.QtCore import Qt
 
 
 class CornerWidget(QWidget):
-
+    '''
+    The red widget on the chessboard interface
+    '''
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.setFixedSize(30, 30)
