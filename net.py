@@ -8,15 +8,15 @@ class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
 
-        self.conv1 = nn.Conv2d(4, 50, 5, padding = 2)
-        self.conv2 = nn.Conv2d(50, 100, 3, padding = 1)
-        self.conv3 = nn.Conv2d(100, 100, 3, padding = 1)
+        self.conv1 = nn.Conv2d(4, 25, 5, padding = 2)
+        self.conv2 = nn.Conv2d(25, 50, 3, padding = 1)
+        self.conv3 = nn.Conv2d(50, 50, 3, padding = 1)
         self.pool = nn.MaxPool2d(3, stride = 1, padding = 1)
     
 
-        self.dense1 = nn.Linear(100 * BOARD_SIZE * BOARD_SIZE, 100)
-        self.dense2 = nn.Linear(100, 50)
-        self.dense3 = nn.Linear(50, 1)
+        self.dense1 = nn.Linear(50 * BOARD_SIZE * BOARD_SIZE, 25)
+        self.dense2 = nn.Linear(25, 5)
+        self.dense3 = nn.Linear(5, 1)
         self.relu = nn.ReLU()
 
     def forward(self, x):
@@ -27,7 +27,6 @@ class NeuralNetwork(nn.Module):
 
         x = self.conv3(x)
         x = self.conv3(x)
-        x = self.pool(x)
         x = self.relu(x)
 
         value = torch.flatten(x,1)

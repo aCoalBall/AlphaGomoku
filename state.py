@@ -75,27 +75,7 @@ class State:
                 for y in range(BOARD_SIZE) :
                     if self.chessboard[x][y] == 0 :
                         legal.add((x,y))
-            #If its an empty board
-            if len(legal) == BOARD_SIZE * BOARD_SIZE:
-                return legal
-            #If not empty
-            else:
-                limited_legal = set()
-                for m in legal :
-                    x,y = m
-                    min_x = max(0, x - 3)
-                    max_x = min(BOARD_SIZE - 1, x + 3)
-                    min_y = max(0, y - 3)
-                    max_y = min(BOARD_SIZE - 1, y + 3)
-                    ranges = set()
-                    for xr in range(min_x, max_x + 1):
-                        for yr in range(min_y, max_y + 1):
-                            ranges.add((xr,yr))
-                    for xr,yr in ranges:
-                        if self.chessboard[xr][yr] != 0 :
-                            limited_legal.add((x,y))
-                            break
-                return limited_legal
+            return legal
         else :
             return set()
 

@@ -34,7 +34,7 @@ class Mcts:
         self.current_node = None #The current accessing node
         self.current_move = None #The current move that cause the current state
 
-        self.ucb_const = 0.8 #The ucb constant
+        self.ucb_const = 1 #The ucb constant
         self.net = None #The neural network
         self.history = [] #the trace of our exploration
     
@@ -155,6 +155,8 @@ class Mcts:
         sample = [parent_state.chessboard, state.chessboard, player_state, move_state]
         batch = [sample]
         batch = torch.tensor(batch, dtype=torch.float)
+        if torch.cuda.is_available(): 
+            batch = batch.cuda()
         value = self.net(batch)
         return value 
 

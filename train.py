@@ -15,10 +15,11 @@ class Selfplay :
         self.learning_rate = 1e-2
         self.loss_func = nn.MSELoss()
         self.optimizer = None
+        self.device = ''
 
     def set_net_models(self, learning_rate = None, loss_func = None):
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.net = NeuralNetwork().to(device)
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.net = NeuralNetwork().to(self.device)
         if os.path.isfile('net_weights.pth'):
             self.net.load_state_dict(torch.load('net_weights.pth'))
             self.net.eval()
@@ -30,42 +31,35 @@ class Selfplay :
     
     def train(self, training_times, searching_times):
         for i in range(training_times) :
+            self.explorer = Mcts()
             res, states, moves, player = self.play_one_game(searching_times)
-            print(res)
-            print(len(moves))
-            print(len(player))
-
             batch = self.get_net_input(states, moves, player)
             standard = self.get_net_standard(res, states)
             self.optimize(batch, standard)
-
             print(i+1, 'rounds done')
         self.save_net('net_weights.pth')
 
     def test(self, searching_times) :
         sum_loss = 0
-        for i in range(2) :
-            res, states, moves, player = self.play_one_game(searching_times)
-            batch = self.get_net_input(states, moves, player)
-            standard = self.get_net_standard(res, states)
-            pred_value = self.net(batch)
-            loss = self.loss_func(pred_value, standard)
-            sum_loss += loss.item()
-    
-        sum_loss = sum_loss / 2.0
-        print(sum_loss)
+        self.explorer = Mcts()
+        res, states, moves, player = self.play_one_game(searching_times)
+        batch = self.get_net_input(states, moves, player)
+        standard = self.get_net_standard(res, states)
+        pred_value = self.net(batch)
+        loss = self.loss_func(pred_value, standard)
+        sum_loss += loss.item()
         return sum_loss
 
 
     def play_one_game(self, searching_times):
         #reset
+        self.explorer = Mcts()
         game = State()
         game_history = []
         move_history = []
 
         while game.check_game_result() == ONGOING :
             game_history.append(copy.deepcopy(game))
-            self.explorer = Mcts()
             self.explorer.mcts_training(state = game, times = searching_times, net = self.net)
             move , game = self.explorer.best_choice_from_root_node()
             move_history.append(move)
@@ -93,6 +87,8 @@ class Selfplay :
         for state in game_history : 
             results.append(result)
         results = torch.tensor(results, dtype=torch.float)
+        if self.device == 'cuda':
+            results = results.cuda()
         return results
                 
     def get_net_input(self, game_history, move_history, player):
@@ -116,6 +112,8 @@ class Selfplay :
             batch.append(sample)
 
         batch = torch.tensor(batch, dtype=torch.float)
+        if self.device == 'cuda':
+            batch = batch.cuda()
         return batch
     
     def optimize(self, batch, standard) :
