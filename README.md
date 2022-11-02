@@ -19,6 +19,8 @@ After downloading, change the working directory to Gomoku, then run commands:
 ***python3 main.py train training_times turns***   for training AI
 for example: ***python3 main.py train 20 30***
 
+***The AI is untrained***
+
 the size of the cnn is relatively small and data is generated in the running time, so the program is not very gpu-demanded. However, since it's a single thread program it is highly cpu-demanded and it may take hours or even days to finish the train depending on the 'training times'(size of epoch) and 'turns'(number of epochs) parameters.
 The trained net is saved to net_weights.pth.
 
