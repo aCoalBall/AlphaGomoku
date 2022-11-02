@@ -1,7 +1,7 @@
 from state import State
 from mcts import *
 from net import NeuralNetwork
-from global_var import BOARD_SIZE, ONGOING, BLACK, WHITE, DRAW, UNCHECKED
+from global_var import BOARD_SIZE, ONGOING, BLACK, WHITE, DRAW, UNCHECKED, SEARCHING_TIMES
 
 import os
 
@@ -113,7 +113,7 @@ class Game(State) :
         """AI's step"""
         current_state = State(chessboard = self.chessboard, player = self.player)
         mc = Mcts() #use Mcts to select
-        mc.mcts_training(current_state, times = 1, net = self.net)
+        mc.mcts_training(current_state, times = SEARCHING_TIMES, net = self.net)
 
         move, state = mc.best_choice_from_root_node()
         self.chessboard = state.chessboard
