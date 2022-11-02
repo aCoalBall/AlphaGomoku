@@ -14,7 +14,7 @@ if anyone tries to run this program directly on a M1 Mac, please set python vers
 ## How to run
 
 ### For directly download 
-After downloading, change the working directory to Gomoku, then run commands:  
+After downloading, change the working directory to AlphaGomoku, then run commands:  
 ***python3 main.py play***   for playing with AI  
 ***python3 main.py train training_times turns***   for training AI
 for example: ***python3 main.py train 20 30***
